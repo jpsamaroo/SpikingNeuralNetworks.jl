@@ -1,10 +1,11 @@
-using StatsBase, Plots
+using .Plots
+# FIXME: using StatsBase
 
 function raster(p)
     fire = p.records[:fire]
-    x, y = SNNFloat[], SNNFloat[];
+    x, y = SNNFloat[], SNNFloat[]
     for t = eachindex(fire)
-        for n in find(fire[t])
+        for n in findall(fire[t])
             push!(x, t)
             push!(y, n)
         end
@@ -18,11 +19,11 @@ function raster(P::Array)
     for p in P
         x, y = raster(p)
         append!(X, x)
-        append!(Y, y + sum(y0))
+        append!(Y, y .+ sum(y0))
         push!(y0, p.N)
     end
     plt = scatter(X, Y, m = (1, :black), leg = :none,
-    xaxis=("t", (0, Inf)), yaxis = ("neuron",))
+                  xaxis=("t", (0, Inf)), yaxis = ("neuron",))
     y0 = y0[2:end-1]
     !isempty(y0) && hline!(plt, cumsum(y0), linecolor = :red)
     return plt

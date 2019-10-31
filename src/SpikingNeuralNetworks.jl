@@ -33,9 +33,8 @@ include("synapse/pinning_full_synapse.jl")
 include("synapse/fl_full_synapse.jl")
 # include("synapse/fl_synapse.jl")
 
-@require Plots="91a5bcdd-55d7-5caf-9e0b-520d859cae80" begin
-    # FIXME: Also require StatsBase
-    include("plot.jl")
+function __init__()
+    @require Plots="91a5bcdd-55d7-5caf-9e0b-520d859cae80" include("plot.jl")
 end
 
 end
