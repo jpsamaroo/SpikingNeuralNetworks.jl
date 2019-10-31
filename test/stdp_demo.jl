@@ -1,6 +1,6 @@
 N = 100
-E1 = SNN.IF(;N = N)
-E2 = SNN.IF(;N = N)
+E1 = SNN.IF(!;N = N)
+E2 = SNN.IF(!;N = N)
 EE = SNN.SpikingSynapse(E1, E2, :ge)
 for n = 1:E1.N SNN.connect!(EE, n, n) end
 SNN.monitor([E1, E2], [:fire])

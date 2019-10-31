@@ -1,24 +1,25 @@
 abstract type AbstractIFParameter end
-@with_kw struct IFParameter <: AbstractIFParameter
-    τm::SNNFloat = 20ms
-    τe::SNNFloat = 5ms
-    τi::SNNFloat = 10ms
-    Vt::SNNFloat = -50mV
-    Vr::SNNFloat = -60mV
-    El::SNNFloat = Vr
+@with_kw struct IFParameter{VF} <: AbstractIFParameter
+    τm::VF = 20ms
+    τe::VF = 5ms
+    τi::VF = 10ms
+    Vt::VF = -50mV
+    Vr::VF = -60mV
+    El::VF = Vr
 end
 
 abstract type AbstractIF end
-@with_kw mutable struct IF <: AbstractIF
+@with_kw mutable struct IF{VF,VB} <: AbstractIF
     param::IFParameter = IFParameter()
     N::SNNInt = 100
-    v::Vector{SNNFloat} = param.Vr .+ rand(N) .* (param.Vt - param.Vr)
-    ge::Vector{SNNFloat} = zeros(N)
-    gi::Vector{SNNFloat} = zeros(N)
-    fire::Vector{Bool} = zeros(Bool, N)
-    I::Vector{SNNFloat} = zeros(N)
+    v::VF = param.Vr .+ rand(eltype(VF), N) .* (param.Vt - param.Vr)
+    ge::VF = zeros(eltype(VF), N)
+    gi::VF = zeros(eltype(VF), N)
+    fire::VB = zeros(eltype(VB), N)
+    I::VF = zeros(eltype(VF), N)
     records::Dict = Dict()
 end
+IF(x;kwargs...) = IF{Vector{SNNFloat},Vector{Bool}}(;kwargs...)
 
 function integrate!(p::IF, param::IFParameter, dt::SNNFloat)
     @unpack N, v, ge, gi, fire, I = p
