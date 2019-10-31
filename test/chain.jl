@@ -1,5 +1,5 @@
 N = 3
-E = SNN.IF(;N = N)
+E = SNN.IF(!;N = N)
 EE = SNN.SpikingSynapse(E, E, :ge; σ=0.5, p=0.8)
 for n in 1:(N - 1)
     SNN.connect!(EE, n, n + 1, 50)

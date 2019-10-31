@@ -5,15 +5,16 @@
     d::SNNFloat = 2
 end
 
-@with_kw mutable struct IZ
+@with_kw mutable struct IZ{VF,VB}
     param::IZParameter = IZParameter()
     N::SNNInt = 100
-    v::Vector{SNNFloat} = fill(-65.0, N)
-    u::Vector{SNNFloat} = param.b * v
-    fire::Vector{Bool} = zeros(Bool, N)
-    I::Vector{SNNFloat} = zeros(N)
+    v::VF = fill(-65.0, N)
+    u::VF = param.b * v
+    fire::VB = zeros(eltype(VB), N)
+    I::VF = zeros(eltype(VF), N)
     records::Dict = Dict()
 end
+IZ(x;kwargs...) = IZ{Vector{SNNFloat},Vector{Bool}}(;kwargs...)
 
 function integrate!(p::IZ, param::IZParameter, dt::SNNFloat)
     @unpack N, v, u, fire, I = p
